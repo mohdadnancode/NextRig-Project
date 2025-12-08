@@ -1,7 +1,21 @@
-import React from 'react'
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import ScrollToTop from "./ScrollToTop";
+import ScrollTopButton from "./ScrollTopButton";
+import { Outlet } from "react-router-dom";
 
-export const Layout = () => {
+function Layout() {
   return (
-    <div>Layout</div>
-  )
+    <div className="min-h-screen bg-[#0d0d0d] text-gray-100 flex flex-col">
+      <Navbar />
+      <ScrollToTop />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      <Footer />
+      <ScrollTopButton />
+    </div>
+  );
 }
+
+export default Layout;
