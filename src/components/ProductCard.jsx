@@ -2,14 +2,28 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useAuth } from "../context/AuthContext";
-import { Heart, ShoppingCart } from "lucide-react";
+import { useCartControls } from "../context/useCartControls";
+import { Heart, ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { cart, addToCart, loading: cartLoading } = useCart();
   const { toggleWishlist, isInWishlist, loading } = useWishlist();
   const { user } = useAuth();
+
+  const cartItem = cart.find((item) => item.id === product.id);
+  const quantity = cartItem?.quantity || 0;
+  const maxStock = product.stock ?? 10;
+
+  const {
+    increase,
+    decrease,
+    remove,
+    canDecrease,
+    canIncrease,
+    loading: controlLoading,
+  } = useCartControls(product.id, quantity, maxStock);
 
   const handleProductClick = () => navigate(`/products/${product.id}`);
 
@@ -19,7 +33,7 @@ function ProductCard({ product }) {
     addToCart(product);
   };
 
-  const handleWishlistToggle = async (e) => {
+  const handleWishlistToggle = (e) => {
     e.stopPropagation();
     if (!user) return toast.error("Please login to manage your wishlist");
     toggleWishlist(product);
@@ -50,13 +64,12 @@ function ProductCard({ product }) {
         {/* Wishlist Button */}
         <button
           onClick={handleWishlistToggle}
+          disabled={loading}
           className={`absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
             wishlisted
               ? "bg-red-500/10 hover:bg-red-500/20"
               : "bg-white/10 hover:bg-white/20"
           }`}
-          title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-          disabled={loading} // Prevent spam clicks during sync
         >
           <Heart
             size={16}
@@ -64,7 +77,7 @@ function ProductCard({ product }) {
               wishlisted
                 ? "fill-red-500 text-red-500"
                 : "text-gray-400 hover:text-red-400 hover:fill-red-400"
-            } ${loading ? "animate-pulse" : ""}`} 
+            } ${loading ? "animate-pulse" : ""}`}
           />
         </button>
       </div>
@@ -80,14 +93,60 @@ function ProductCard({ product }) {
           </p>
         </div>
 
-        {/* Add to Cart */}
-        <button
-          onClick={handleAddToCart}
-          className="mt-3 w-full bg-[#76b900] hover:bg-[#68a500] text-black font-semibold text-sm px-3 py-2 rounded-md hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1"
-        >
-          <span>Add</span>
-          <ShoppingCart size={16} />
-        </button>
+        {quantity === 0 ? (
+          <button
+            onClick={handleAddToCart}
+            disabled={cartLoading}
+            className="mt-3 w-full bg-[#76b900] hover:bg-[#68a500] disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold text-sm px-3 py-2 rounded-md transition-all duration-300 flex items-center justify-center gap-1"
+          >
+            <span>Add</span>
+            <ShoppingCart size={16} />
+          </button>
+        ) : (
+          <div
+            className="mt-3 w-full flex items-center justify-between bg-black/40 border border-[#76b900]/40 rounded-md px-2 py-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Minus */}
+            <button
+              disabled={!canDecrease || controlLoading}
+              onClick={decrease}
+              className={`px-2 text-lg font-bold ${
+                !canDecrease || controlLoading
+                  ? "text-gray-500"
+                  : "text-[#76b900]"
+              }`}
+            >
+              <Minus size={20} />
+            </button>
+
+            {/* Quantity */}
+            <span className="text-white font-semibold text-sm">
+              {quantity}
+            </span>
+
+            {/* Plus */}
+<button
+  onClick={increase}
+  disabled={controlLoading}
+  className={`${
+    !canIncrease ? "text-gray-500" : "text-[#76b900]"
+  }`}
+>
+  <Plus size={20} />
+</button>
+
+            {/* Delete */}
+            <button
+              onClick={remove}
+              disabled={controlLoading}
+              className="ml-2 text-red-400 hover:text-red-500 hover:scale-110 transition disabled:opacity-50"
+              title="Remove from cart"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
