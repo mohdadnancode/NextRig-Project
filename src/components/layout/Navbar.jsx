@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const location = useLocation();
@@ -25,6 +27,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    toast.success("Logged out. See you next time! 👋");
     setShowDropdown(false);
     setMenuOpen(false);
     navigate("/");
