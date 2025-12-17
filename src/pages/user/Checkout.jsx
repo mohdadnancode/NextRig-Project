@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+import api from "../../api/client";
 
 const Checkout = () => {
   const { cart, totalPrice, clearCart } = useCart();
@@ -17,48 +17,49 @@ const Checkout = () => {
   const [orderSuccess, setOrderSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    address: '',
-    city: '',
-    pincode: '',
-    mobileNumber: '',
-    paymentMethod: '',
-    transactionId: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    cardName: '',
+    fullName: "",
+    address: "",
+    city: "",
+    pincode: "",
+    mobileNumber: "",
+    paymentMethod: "",
+    transactionId: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+    cardName: "",
   });
 
-  const finalTotal = formData.paymentMethod === 'cod' ? totalPrice + codFee : totalPrice;
+  const finalTotal =
+    formData.paymentMethod === "cod" ? totalPrice + codFee : totalPrice;
 
   useEffect(() => {
     if (user && user.address) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        fullName: user.address.fullName || '',
-        address: user.address.address || '',
-        city: user.address.city || '',
-        pincode: user.address.pincode || '',
-        mobileNumber: user.address.mobileNumber || '',
+        fullName: user.address.fullName || "",
+        address: user.address.address || "",
+        city: user.address.city || "",
+        pincode: user.address.pincode || "",
+        mobileNumber: user.address.mobileNumber || "",
       }));
     }
   }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePaymentMethodChange = (method) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       paymentMethod: method,
-      transactionId: '',
-      cardNumber: '',
-      expiry: '',
-      cvv: '',
-      cardName: '',
+      transactionId: "",
+      cardNumber: "",
+      expiry: "",
+      cvv: "",
+      cardName: "",
     }));
   };
 
@@ -67,11 +68,11 @@ const Checkout = () => {
   const validateCardDetails = () => {
     const { cardNumber, expiry, cvv, cardName } = formData;
     if (!/^\d{16}$/.test(cardNumber))
-      return toast.error('Card number must be 16 digits');
+      return toast.error("Card number must be 16 digits");
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry))
-      return toast.error('Invalid expiry (MM/YY)');
-    if (!/^\d{3}$/.test(cvv)) return toast.error('Invalid CVV (3 digits)');
-    if (!cardName.trim()) return toast.error('Enter cardholder name');
+      return toast.error("Invalid expiry (MM/YY)");
+    if (!/^\d{3}$/.test(cvv)) return toast.error("Invalid CVV (3 digits)");
+    if (!cardName.trim()) return toast.error("Enter cardholder name");
     return true;
   };
 
@@ -86,7 +87,7 @@ const Checkout = () => {
     );
   };
 
-  const isPaymentMethodSelected = () => formData.paymentMethod.trim() !== '';
+  const isPaymentMethodSelected = () => formData.paymentMethod.trim() !== "";
 
   const validateForm = () => {
     const {
@@ -99,19 +100,21 @@ const Checkout = () => {
       transactionId,
     } = formData;
 
-    if (!fullName.trim()) return toast.error('Please enter your full name');
-    if (!address.trim()) return toast.error('Please enter your address');
-    if (!city.trim()) return toast.error('Please enter your city');
+    if (!fullName.trim()) return toast.error("Please enter your full name");
+    if (!address.trim()) return toast.error("Please enter your address");
+    if (!city.trim()) return toast.error("Please enter your city");
     if (!pincode.trim() || pincode.length !== 6)
-      return toast.error('Please enter a valid 6-digit pincode');
+      return toast.error("Please enter a valid 6-digit pincode");
     if (!mobileNumber.trim() || mobileNumber.length !== 10)
-      return toast.error('Please enter a valid 10-digit mobile number');
+      return toast.error("Please enter a valid 10-digit mobile number");
     if (!paymentMethod.trim())
-      return toast.error('Please select a payment method');
+      return toast.error("Please select a payment method");
 
-    if (paymentMethod === 'UPI' && !isValidTransactionId(transactionId))
-      return toast.error('Invalid Transaction ID (35 alphanumeric characters only)');
-    if (paymentMethod === 'card' && !validateCardDetails()) return false;
+    if (paymentMethod === "UPI" && !isValidTransactionId(transactionId))
+      return toast.error(
+        "Invalid Transaction ID (35 alphanumeric characters only)"
+      );
+    if (paymentMethod === "card" && !validateCardDetails()) return false;
 
     return true;
   };
@@ -119,7 +122,7 @@ const Checkout = () => {
   const updateUserAddress = async () => {
     if (!user) return;
     try {
-      await axios.patch(`http://localhost:3000/users/${user.id}`, {
+      await api.patch(`/users/${user.id}`, {
         address: {
           fullName: formData.fullName,
           address: formData.address,
@@ -130,20 +133,20 @@ const Checkout = () => {
         updatedAt: new Date().toISOString(),
       });
     } catch (error) {
-      console.error('Error updating address:', error);
-      toast.error('Failed to update address.');
+      console.error("Error updating address:", error);
+      toast.error("Failed to update address.");
     }
   };
 
   const createOrder = async () => {
     if (!user) return null;
     try {
-      const { data: latestUser } = await axios.get(`http://localhost:3000/users/${user.id}`);
+      const { data: latestUser } = await api.get(`/users/${user.id}`);
 
       const newOrder = {
-        id: 'ORD-' + Date.now(),
+        id: "ORD-" + Date.now(),
         date: new Date().toISOString(),
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           id: item.id,
           name: item.name,
           price: item.price,
@@ -152,17 +155,17 @@ const Checkout = () => {
           category: item.category,
         })),
         totalAmount: finalTotal,
-        status: 'pending',
+        status: "pending",
         paymentMethod: formData.paymentMethod,
         paymentDetails:
-          formData.paymentMethod === 'UPI'
+          formData.paymentMethod === "UPI"
             ? { transactionId: formData.transactionId }
-            : formData.paymentMethod === 'card'
+            : formData.paymentMethod === "card"
             ? {
                 cardNumber: `XXXX-XXXX-XXXX-${formData.cardNumber.slice(-4)}`,
                 cardName: formData.cardName,
               }
-            : formData.paymentMethod === 'cod'
+            : formData.paymentMethod === "cod"
             ? { convenienceFee: codFee }
             : {},
         shippingAddress: {
@@ -174,15 +177,15 @@ const Checkout = () => {
         },
       };
 
-      await axios.patch(`http://localhost:3000/users/${user.id}`, {
+      await api.patch(`/users/${user.id}`, {
         orders: [...(latestUser.orders || []), newOrder],
         updatedAt: new Date().toISOString(),
       });
 
       return newOrder;
     } catch (error) {
-      console.error('Error creating order:', error);
-      toast.error('Order failed. Please try again.');
+      console.error("Error creating order:", error);
+      toast.error("Order failed. Please try again.");
       throw error;
     }
   };
@@ -191,8 +194,8 @@ const Checkout = () => {
     if (!validateForm()) return;
 
     if (!isAuthenticated) {
-      toast.error('Please login to complete checkout');
-      navigate('/login');
+      toast.error("Please login to complete checkout");
+      navigate("/login");
       return;
     }
 
@@ -204,17 +207,17 @@ const Checkout = () => {
 
       await createOrder();
       clearCart();
-      toast.success('Order placed successfully!');
+      toast.success("Order placed successfully!");
       setOrderSuccess(true);
     } catch (error) {
-      console.error('Checkout failed:', error);
-      toast.error('Checkout failed. Please try again.');
+      console.error("Checkout failed:", error);
+      toast.error("Checkout failed. Please try again.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const handleGoToHome = () => navigate('/');
+  const handleGoToHome = () => navigate("/");
 
   const hasSavedAddress =
     user?.address &&
@@ -246,8 +249,12 @@ const Checkout = () => {
       <div className="min-h-screen bg-[#0d0d0d] text-gray-100 flex items-center justify-center p-4">
         <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-8 max-w-md w-full text-center">
           <div className="text-6xl mb-4">✅</div>
-          <h1 className="text-3xl font-bold text-[#76b900] mb-4">Order Successful</h1>
-          <p className="text-gray-300 mb-6">Thank you for shopping with NextRig!</p>
+          <h1 className="text-3xl font-bold text-[#76b900] mb-4">
+            Order Successful
+          </h1>
+          <p className="text-gray-300 mb-6">
+            Thank you for shopping with NextRig!
+          </p>
           <div className="flex gap-3">
             <button
               onClick={handleGoToHome}
@@ -256,7 +263,7 @@ const Checkout = () => {
               Go to Home
             </button>
             <button
-              onClick={() => navigate('/orders')}
+              onClick={() => navigate("/orders")}
               className="flex-1 bg-[#76b900] text-black font-bold py-3 px-6 rounded-lg hover:shadow-[0_0_15px_#76b900] hover:scale-105 transition-all duration-300"
             >
               View Orders
@@ -277,24 +284,31 @@ const Checkout = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Order Summary */}
           <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-[#76b900]">Order Summary</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-[#76b900]">
+              Order Summary
+            </h2>
 
             <div className="space-y-4 mb-6">
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center border-b border-white/10 pb-3">
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center border-b border-white/10 pb-3"
+                >
                   <div className="flex-1">
                     <h3 className="font-medium text-white">{item.name}</h3>
-                    <p className="text-sm text-gray-400">Qty: {item.quantity}</p>
+                    <p className="text-sm text-gray-400">
+                      Qty: {item.quantity}
+                    </p>
                   </div>
                   <p className="text-[#76b900] font-semibold">
-                    ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                    ₹{(item.price * item.quantity).toLocaleString("en-IN")}
                   </p>
                 </div>
               ))}
             </div>
 
             <div className="border-t border-white/20 pt-4 space-y-1">
-              {formData.paymentMethod === 'cod' && (
+              {formData.paymentMethod === "cod" && (
                 <div className="flex justify-between text-sm text-gray-400">
                   <span>COD Convenience Fee:</span>
                   <span className="text-gray-300">₹{codFee}</span>
@@ -303,7 +317,7 @@ const Checkout = () => {
               <div className="flex justify-between items-center text-xl font-bold">
                 <span>Total Amount:</span>
                 <span className="text-[#76b900]">
-                  ₹{finalTotal.toLocaleString('en-IN')}
+                  ₹{finalTotal.toLocaleString("en-IN")}
                 </span>
               </div>
             </div>
@@ -311,18 +325,22 @@ const Checkout = () => {
 
           {/* Delivery & Payment */}
           <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-[#76b900]">Delivery Details</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-[#76b900]">
+              Delivery Details
+            </h2>
 
             {/* Address Section */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-300">Shipping Address</h3>
+                <h3 className="text-lg font-medium text-gray-300">
+                  Shipping Address
+                </h3>
                 {hasSavedAddress && (
                   <button
                     onClick={() => setIsEditingAddress(!isEditingAddress)}
                     className="text-[#76b900] hover:text-[#68a500] text-sm font-medium transition-colors"
                   >
-                    {isEditingAddress ? 'Cancel' : 'Change Address'}
+                    {isEditingAddress ? "Cancel" : "Change Address"}
                   </button>
                 )}
               </div>
@@ -431,11 +449,15 @@ const Checkout = () => {
               {hasSavedAddress && !isEditingAddress && (
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <p className="text-white font-medium">{formData.fullName}</p>
-                  <p className="text-gray-400 text-sm mt-1">{formData.address}</p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    {formData.address}
+                  </p>
                   <p className="text-gray-400 text-sm">
                     {formData.city} - {formData.pincode}
                   </p>
-                  <p className="text-gray-400 text-sm">Mobile: {formData.mobileNumber}</p>
+                  <p className="text-gray-400 text-sm">
+                    Mobile: {formData.mobileNumber}
+                  </p>
                 </div>
               )}
             </div>
@@ -445,15 +467,15 @@ const Checkout = () => {
               <label className="block text-sm font-medium text-gray-300 mb-4">
                 Payment Method *
               </label>
-              
+
               <div className="space-y-3">
-                {['UPI', 'card', 'cod'].map((method) => (
+                {["UPI", "card", "cod"].map((method) => (
                   <label
                     key={method}
                     className={`flex items-center space-x-3 cursor-pointer p-3 rounded-lg border transition-colors ${
                       formData.paymentMethod === method
-                        ? 'border-[#76b900] bg-[#76b900]/10'
-                        : 'border-white/20 hover:border-[#76b900]/50'
+                        ? "border-[#76b900] bg-[#76b900]/10"
+                        : "border-white/20 hover:border-[#76b900]/50"
                     }`}
                   >
                     <input
@@ -461,21 +483,23 @@ const Checkout = () => {
                       name="paymentMethod"
                       value={method}
                       checked={formData.paymentMethod === method}
-                      onChange={(e) => handlePaymentMethodChange(e.target.value)}
+                      onChange={(e) =>
+                        handlePaymentMethodChange(e.target.value)
+                      }
                       className="text-[#76b900] focus:ring-[#76b900]"
                     />
                     <span className="text-white">
-                      {method === 'cod'
-                        ? 'Cash on Delivery'
-                        : method === 'card'
-                        ? 'Credit/Debit Card'
-                        : 'UPI'}
+                      {method === "cod"
+                        ? "Cash on Delivery"
+                        : method === "card"
+                        ? "Credit/Debit Card"
+                        : "UPI"}
                     </span>
                   </label>
                 ))}
               </div>
 
-              {formData.paymentMethod === 'cod' && (
+              {formData.paymentMethod === "cod" && (
                 <div className="mt-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-sm text-yellow-400">
                   <p>
                     Cash, UPI and Cards accepted.{" "}
@@ -487,7 +511,7 @@ const Checkout = () => {
                 </div>
               )}
 
-              {formData.paymentMethod === 'UPI' && (
+              {formData.paymentMethod === "UPI" && (
                 <div className="mt-4">
                   <label className="block text-sm text-gray-300 mb-2">
                     UPI Transaction ID *
@@ -506,7 +530,7 @@ const Checkout = () => {
                 </div>
               )}
 
-              {formData.paymentMethod === 'card' && (
+              {formData.paymentMethod === "card" && (
                 <div className="mt-4 space-y-4">
                   <input
                     type="text"
@@ -558,7 +582,11 @@ const Checkout = () => {
             {/* Confirm Button */}
             <button
               onClick={handleConfirmPayment}
-              disabled={isProcessing || !isAddressComplete() || !isPaymentMethodSelected()}
+              disabled={
+                isProcessing ||
+                !isAddressComplete() ||
+                !isPaymentMethodSelected()
+              }
               className="w-full bg-[#76b900] text-black font-bold py-4 px-6 rounded-lg hover:shadow-[0_0_20px_#76b900] hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
             >
               {isProcessing ? (
@@ -567,7 +595,7 @@ const Checkout = () => {
                   Processing...
                 </>
               ) : (
-                `Confirm Payment - ₹${finalTotal.toLocaleString('en-IN')}`
+                `Confirm Payment - ₹${finalTotal.toLocaleString("en-IN")}`
               )}
             </button>
 

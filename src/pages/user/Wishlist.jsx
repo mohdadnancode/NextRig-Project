@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useWishlist } from "../context/WishlistContext";
-import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 const Wishlist = () => {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const {
     wishlist,
     removeFromWishlist,
@@ -48,8 +48,7 @@ const Wishlist = () => {
       toast.success(`${product.name} added to cart`);
     } catch (error) {
       toast.error("Something went wrong");
-      console.log(error);
-      
+      console.error(error);
     }
   };
 

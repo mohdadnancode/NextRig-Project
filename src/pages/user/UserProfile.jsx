@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import api from "../../api/client";
 
 const UserProfile = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -105,8 +105,8 @@ const UserProfile = () => {
         updatedUser.password = formData.password;
       }
 
-      const response = await axios.put(
-        `http://localhost:3000/users/${user.id}`,
+      const response = await api.put(
+        `/users/${user.id}`,
         updatedUser
       );
 
