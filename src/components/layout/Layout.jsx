@@ -1,7 +1,7 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import ScrollToTop from "./ScrollToTop";
-import ScrollTopButton from "./ScrollTopButton";
+import ScrollToTop from "../ui/ScrollToTop";
+import ScrollTopButton from "../ui/ScrollTopButton";
 import { Outlet } from "react-router-dom";
 
 function Layout() {
