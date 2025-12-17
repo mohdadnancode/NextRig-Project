@@ -1,47 +1,60 @@
 import { Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import Cart from "./pages/Cart";
-import Products from "./pages/Products";
-import ProductDetails from "./pages/ProductDetails";
-import Checkout from "./pages/Checkout";
-import UserProfile from "./pages/UserProfile";
-import MyOrders from "./pages/MyOrder";
-import OrderDetails from "./pages/OrderDetails ";
-import Wishlist from "./pages/Whishlist";
-import About from "./pages/footer pages/About";
-import Contact from "./pages/footer pages/Contact";
-import Careers from "./pages/footer pages/Careers";
-import FAQ from "./pages/footer pages/FAQ";
-import PrivacyPolicy from "./pages/footer pages/PrivacyPolicy";
-import Returns from "./pages/footer pages/Returns";
+import { Suspense, lazy } from "react";
+import Layout from "./components/layout/Layout";
 
+const Home = lazy(() => import("./pages/public/Home"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const Cart = lazy(() => import("./pages/user/Cart"));
+const Products = lazy(() => import("./pages/public/Products"));
+const ProductDetails = lazy(() => import("./pages/public/ProductDetails"));
+const Checkout = lazy(() => import("./pages/user/Checkout"));
+const UserProfile = lazy(() => import("./pages/user/UserProfile"));
+const MyOrders = lazy(() => import("./pages/user/MyOrder"));
+const Wishlist = lazy(() => import("./pages/user/Whishlist"));
+
+const About = lazy(() => import("./pages/FooterPages/About"));
+const Contact = lazy(() => import("./pages/FooterPages/Contact"));
+const Careers = lazy(() => import("./pages/FooterPages/Careers"));
+const FAQ = lazy(() => import("./pages/FooterPages/FAQ"));
+const PrivacyPolicy = lazy(() => import("./pages/FooterPages/PrivacyPolicy"));
+const Returns = lazy(() => import("./pages/FooterPages/Returns"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist /> } />
-        <Route path="/profile" element={ <UserProfile />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders" element={<MyOrders />} />
-        <Route path="/orders/:id" element={<OrderDetails />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/returns" element={<Returns />} />
-      </Route>
-    </Routes>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen bg-[#0d0d0d] text-[#76b900] text-lg font-medium">
+          Loading...
+        </div>
+      }
+    >
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<MyOrders />} />
+
+          {/* Footer Pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/returns" element={<Returns />} />
+        </Route>
+
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 };
 
