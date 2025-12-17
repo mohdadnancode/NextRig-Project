@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "./AuthContext";
 import toast from "react-hot-toast";
+import api from "../api/client";
 
 export const CartContext = createContext();
 
@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
     if (!user?.id) return;
 
     try {
-      await axios.patch(`http://localhost:3000/users/${user.id}`, {
+      await api.patch(`/users/${user.id}`, {
         cart: updatedCart,
         updatedAt: new Date().toISOString(),
       });
