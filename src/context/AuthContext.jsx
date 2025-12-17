@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/client";
 
 export const AuthContext = createContext();
 
@@ -25,8 +25,8 @@ export const AuthProvider = ({ children }) => {
     setAuthError("");
 
     try {
-      const { data: existing } = await axios.get(
-        `http://localhost:3000/users?email=${userData.email}`
+      const { data: existing } = await api.get(
+        `/users?email=${userData.email}`
       );
 
       if (existing.length > 0) throw new Error("Email already registered");
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         isBlock: false,
       };
 
-      await axios.post("http://localhost:3000/users", newUser);
+      await api.post("/users", newUser);
       return { success: true };
     } catch (error) {
       setAuthError(error.message || "Registration failed. Try again.");
@@ -62,8 +62,8 @@ export const AuthProvider = ({ children }) => {
     setAuthError("");
 
     try {
-      const { data: users } = await axios.get(
-        `http://localhost:3000/users?email=${email}&password=${password}`
+      const { data: users } = await api.get(
+        `/users?email=${email}&password=${password}`
       );
 
       if (users.length === 0) throw new Error("Invalid email or password");
