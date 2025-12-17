@@ -1,5 +1,200 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "a3ed",
+      "username": "Adnan",
+      "email": "adnan@gmail.com",
+      "password": "123456",
+      "profileImage": "",
+      "address": {
+        "fullName": "Mohammed Adnan",
+        "address": "Udyawar Manjeshwar",
+        "city": "Kasaragod",
+        "pincode": "671323",
+        "mobileNumber": "9074774402"
+      },
+      "cart": [
+        {
+          "id": "35",
+          "name": "Lian Li Galahad 360 AIO RGB",
+          "brand": "Lian Li",
+          "category": "Cooling System",
+          "price": 15999,
+          "description": "Premium liquid cooling solution with aluminum pump housing and RGB lighting.",
+          "image": "https://m.media-amazon.com/images/I/61N5ODImusL._SX679_.jpg",
+          "featured": false,
+          "quantity": 1
+        },
+        {
+          "id": "22",
+          "name": "MSI B650 Tomahawk WiFi",
+          "brand": "MSI",
+          "category": "Motherboard",
+          "price": 22999,
+          "description": "AM5 motherboard with PCIe 5.0 support and excellent VRMs.",
+          "image": "https://m.media-amazon.com/images/I/81ymStt-9cL._SX679_.jpg",
+          "featured": false,
+          "quantity": 1
+        }
+      ],
+      "orders": [
+        {
+          "id": "ORD-1765181800106",
+          "date": "2025-12-08T08:16:40.106Z",
+          "items": [
+            {
+              "id": "38",
+              "name": "Seasonic Focus GX-750 80+ Gold",
+              "price": 9999,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/71yaAdRzFCL._SX522_.jpg",
+              "category": "Power Supply"
+            }
+          ],
+          "totalAmount": 10014,
+          "status": "cancelled",
+          "paymentMethod": "cod",
+          "paymentDetails": {
+            "convenienceFee": 15
+          },
+          "shippingAddress": {
+            "fullName": "Mohammed Adnan",
+            "address": "Udyawar Manjeshwar",
+            "city": "Kasaragod",
+            "pincode": "671323",
+            "mobileNumber": "9074774402"
+          }
+        },
+        {
+          "id": "ORD-1765187026472",
+          "date": "2025-12-08T09:43:46.472Z",
+          "items": [
+            {
+              "id": "59",
+              "name": "Lenovo Legion 5 Pro (RTX 3070)",
+              "price": 149999,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/71UQsd1U59L._SX522_.jpg",
+              "category": "Laptop"
+            },
+            {
+              "id": "26",
+              "name": "Sony PlayStation 5",
+              "price": 55999,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/51ljnEaW0pL._SX679_.jpg",
+              "category": "Gaming Console"
+            }
+          ],
+          "totalAmount": 206013,
+          "status": "pending",
+          "paymentMethod": "cod",
+          "paymentDetails": {
+            "convenienceFee": 15
+          },
+          "shippingAddress": {
+            "fullName": "Mohammed Adnan",
+            "address": "Udyawar Manjeshwar",
+            "city": "Kasaragod",
+            "pincode": "671323",
+            "mobileNumber": "9074774402"
+          }
+        },
+        {
+          "id": "ORD-1765699353900",
+          "date": "2025-12-14T08:02:33.900Z",
+          "items": [
+            {
+              "id": "16",
+              "name": "Samsung 980 PRO 1TB NVMe SSD",
+              "price": 8999,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/71qA45tWZ5L._SX679_.jpg",
+              "category": "Storage"
+            }
+          ],
+          "totalAmount": 9014,
+          "status": "pending",
+          "paymentMethod": "cod",
+          "paymentDetails": {
+            "convenienceFee": 15
+          },
+          "shippingAddress": {
+            "fullName": "Mohammed Adnan",
+            "address": "Udyawar Manjeshwar",
+            "city": "Kasaragod",
+            "pincode": "671323",
+            "mobileNumber": "9074774402"
+          }
+        }
+      ],
+      "wishlist": [
+        {
+          "id": "5",
+          "name": "Gigabyte RTX 4060 Eagle OC",
+          "brand": "Gigabyte",
+          "category": "GPU",
+          "price": 52999,
+          "description": "Affordable RTX card with ray tracing and AI-powered performance boost.",
+          "image": "https://m.media-amazon.com/images/I/71g2Lc8urJL._SX679_.jpg",
+          "featured": false
+        },
+        {
+          "id": "67",
+          "name": "MSI Geforce RTX 5090",
+          "brand": "MSI",
+          "category": "GPU",
+          "price": 451799,
+          "description": "MSI Geforce RTX 5090 32G SUPRIM Liquid SOC Graphic Card - NVIDIA Geforce RTX 5090 GPU, 32GB GDDR7 512-Bit Memory, 28 Gbps, PCI_e Gen 5 X 16 Interface, Upto 2565 Mhz, STORMFORCE Fan",
+          "image": "https://m.media-amazon.com/images/I/61W07KSaKYL._SX450_.jpg",
+          "featured": true
+        }
+      ],
+      "createdAt": "2025-11-27T04:32:46.576Z",
+      "updatedAt": "2025-12-17T05:11:49.044Z",
+      "isBlock": false
+    },
+    {
+      "id": "pg3j",
+      "username": "GamerX",
+      "email": "gamerx@gmail.com",
+      "password": "123456",
+      "profileImage": "",
+      "address": {
+        "fullName": "Mr. GamerX",
+        "address": "Somewhere inside a Open World",
+        "city": "City",
+        "pincode": "123456",
+        "mobileNumber": "1234567890"
+      },
+      "cart": [],
+      "orders": [],
+      "wishlist": [],
+      "createdAt": "2025-12-01T08:45:07.862Z",
+      "updatedAt": "2025-12-01T11:13:09.274Z",
+      "isBlock": false
+    },
+    {
+      "id": "gzx0",
+      "username": "hehe",
+      "email": "hehe@gmail.com",
+      "password": "123456",
+      "profileImage": "",
+      "address": {
+        "fullName": "Hehe he",
+        "address": "hehehhe",
+        "city": "hehe",
+        "pincode": "123456",
+        "mobileNumber": "0987654321"
+      },
+      "cart": [],
+      "orders": [],
+      "wishlist": [],
+      "createdAt": "2025-12-01T17:03:22.069Z",
+      "updatedAt": "2025-12-02T16:58:08.394Z",
+      "isBlock": false
+    }
+  ],
   "products": [
     {
       "id": "1",
@@ -660,6 +855,16 @@
       "description": "Cable management kit with vibrant addressable RGB lighting.",
       "image": "https://m.media-amazon.com/images/I/61oPn3xPTGL._SX679_.jpg",
       "featured": false
+    },
+    {
+      "id": "67",
+      "name": "MSI Geforce RTX 5090",
+      "brand": "MSI",
+      "category": "GPU",
+      "price": 451799,
+      "description": "MSI Geforce RTX 5090 32G SUPRIM Liquid SOC Graphic Card - NVIDIA Geforce RTX 5090 GPU, 32GB GDDR7 512-Bit Memory, 28 Gbps, PCI_e Gen 5 X 16 Interface, Upto 2565 Mhz, STORMFORCE Fan",
+      "image": "https://m.media-amazon.com/images/I/61W07KSaKYL._SX450_.jpg",
+      "featured": true
     }
   ]
 }
