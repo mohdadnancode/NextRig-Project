@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Layout from "./components/layout/Layout";
+import ProtectedRoute from "./Auth/ProtectedRoute";
 
 const Home = lazy(() => import("./pages/public/Home"));
 const Register = lazy(() => import("./pages/auth/Register"));
@@ -37,10 +38,24 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<MyOrders />} />
 
           {/* Footer Pages */}

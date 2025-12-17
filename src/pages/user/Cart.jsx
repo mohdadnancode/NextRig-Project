@@ -1,25 +1,18 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import { useAuth } from "../../context/AuthContext";
+import { useCartControls } from "../../context/useCartControls"; 
+import { Plus, Minus, Trash2} from "lucide-react"
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const {
     cart,
-    removeFromCart,
-    updateQuantity,
     clearCart,
     cartCount,
     totalPrice,
     loading,
   } = useCart();
-
-  const handleIncrease = (id, qty) => updateQuantity(id, qty + 1);
-  const handleDecrease = (id, qty) => {
-    if (qty > 1) updateQuantity(id, qty - 1);
-  };
 
   if (loading) {
     return (
@@ -29,23 +22,6 @@ const Cart = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-[#0d0d0d] text-gray-100 flex items-center justify-center px-4 pt-20">
-        <div className="text-center">
-          <h2 className="text-3xl font-semibold mb-8">
-            Please log in to view your cart
-          </h2>
-          <Link
-            to="/login"
-            className="inline-flex items-center justify-center rounded-lg bg-[#76b900] text-black font-medium px-6 py-3 hover:shadow-[0_0_10px_#76b900] hover:scale-105 transition-transform"
-          >
-            Login to Continue
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   if (cart.length === 0) {
     return (
@@ -76,74 +52,87 @@ const Cart = () => {
         {/* Cart Items */}
         <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/10 shadow-lg shadow-black/30 overflow-hidden mb-6">
           <div className="p-6">
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="flex flex-col sm:flex-row gap-4 items-start sm:items-center py-6 border-b border-white/10 last:border-b-0"
-              >
-                {/* Product Image */}
-                <div className="flex-shrink-0">
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-lg"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/5 rounded-lg flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">No Image</span>
-                    </div>
-                  )}
-                </div>
+            {cart.map((item) => {
+              const {
+                increase,
+                decrease,
+                remove,
+                canDecrease,
+                loading: controlLoading,
+              } = useCartControls(item.id, item.quantity, item.stock);
 
-                {/* Product Info */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg sm:text-xl font-semibold mb-2 truncate">
-                    {item.name}
-                  </h3>
-                  <p className="text-[#76b900] text-lg font-medium mb-3">
-                    ₹{item.price.toLocaleString("en-IN")} each
-                  </p>
+              return (
+                <div
+                  key={item.id}
+                  className="flex flex-col sm:flex-row gap-4 items-start sm:items-center py-6 border-b border-white/10 last:border-b-0"
+                >
+                  {/* Product Image */}
+                  <div className="flex-shrink-0">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/5 rounded-lg flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">No Image</span>
+                      </div>
+                    )}
+                  </div>
 
-                  {/* Quantity Controls */}
-                  <div className="flex items-center gap-3">
-                    <span className="text-gray-400 text-sm">Quantity:</span>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleDecrease(item.id, item.quantity)}
-                        className="w-8 h-8 rounded-md border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold transition-colors flex items-center justify-center"
-                        aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className="w-10 text-center font-medium">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => handleIncrease(item.id, item.quantity)}
-                        className="w-8 h-8 rounded-md border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold transition-colors flex items-center justify-center"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+                  {/* Product Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-2 truncate">
+                      {item.name}
+                    </h3>
+                    <p className="text-[#76b900] text-lg font-medium mb-3">
+                      ₹{item.price.toLocaleString("en-IN")} each
+                    </p>
+
+                    {/* Quantity Controls */}
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-400 text-sm">Quantity:</span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={decrease}
+                          disabled={!canDecrease || controlLoading}
+                          className="w-8 h-8 rounded-md border border-white/20 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white font-semibold transition-colors flex items-center justify-center"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus size={20} />
+                        </button>
+                        <span className="w-10 text-center font-medium">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={increase}
+                          disabled={controlLoading}
+                          className="w-8 h-8 rounded-md border border-white/20 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white font-semibold transition-colors flex items-center justify-center"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Item Total & Remove */}
-                <div className="flex flex-col items-end gap-3 w-full sm:w-auto">
-                  <p className="text-xl font-semibold text-[#76b900]">
-                    ₹{(item.price * item.quantity).toLocaleString("en-IN")}
-                  </p>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="px-4 py-2 rounded-lg border border-red-500/60 text-red-400 hover:bg-red-500/10 transition-colors text-sm font-medium"
-                  >
-                    Remove
-                  </button>
+                  {/* Item Total & Remove */}
+                  <div className="flex flex-col items-end gap-3 w-full sm:w-auto">
+                    <p className="text-xl font-semibold text-[#76b900]">
+                      ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+                    </p>
+                    <button
+                      onClick={remove}
+                      disabled={controlLoading}
+                      className="px-4 py-2 rounded-lg border border-red-500/60 text-red-400 hover:bg-red-500/10 disabled:opacity-50 transition-colors text-sm font-medium"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

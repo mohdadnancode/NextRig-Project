@@ -7,7 +7,7 @@ import api from "../../api/client";
 
 const Checkout = () => {
   const { cart, totalPrice, clearCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const codFee = 15;
@@ -192,12 +192,6 @@ const Checkout = () => {
 
   const handleConfirmPayment = async () => {
     if (!validateForm()) return;
-
-    if (!isAuthenticated) {
-      toast.error("Please login to complete checkout");
-      navigate("/login");
-      return;
-    }
 
     setIsProcessing(true);
     try {
