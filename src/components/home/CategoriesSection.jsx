@@ -1,74 +1,190 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import gpu from "../assets/gpu.png";
-import keyboard from "../assets/keyboard.jpg";
-import console from "../assets/console.jpg";
-import monitor from "../assets/monitor.jpg";
+import api from "../../api/client";
 
-const POPULAR_CATEGORIES = [
-  {
-    name: "GPU",
-    icon: gpu,
-  },
-  {
-    name: "Keyboard",
-    icon: keyboard,
-  },
-  {
-    name: "Gaming Console",
-    icon: console,
-  },
-  {
-    name: "Monitor",
-    icon: monitor,
-  },
-];
+import gpu from "../../assets/images/products/gpu.webp";
+import cpu from "../../assets/images/products/cpu.webp";
+import console from "../../assets/images/products/console.webp";
+import ram from "../../assets/images/products/ram.webp";
+import storage from "../../assets/images/products/ssd.webp";
+import motherboard from "../../assets/images/products/motherboard.webp";
+import handheld from "../../assets/images/products/handheld.webp";
+import cooler from "../../assets/images/products/cooler.webp";
+import powersupply from "../../assets/images/products/powersupply.webp";
+import pcCase from "../../assets/images/products/case.webp"
+import monitor from "../../assets/images/products/monitor.webp";
+import mouse from "../../assets/images/products/mouse.webp";
+import keyboard from "../../assets/images/products/keyboard.webp";
+import headset from "../../assets/images/products/headset.webp";
+import microphone from "../../assets/images/products/microphone.webp";
+import laptop from "../../assets/images/products/laptop.webp";
+import accessory from "../../assets/images/products/accessory.webp";
+
+
+const categoryImages = {
+  GPU: gpu,
+  CPU: cpu,
+  "Gaming Console": console,
+  RAM: ram,
+  Storage: storage,
+  Motherboard: motherboard,
+  Handheld: handheld,
+  "Cooling System": cooler,
+  "Power Supply": powersupply,
+  "PC Case": pcCase,
+  Monitor: monitor,
+  Mouse: mouse,
+  Keyboard: keyboard,
+  Headset: headset,
+  Microphone: microphone,
+  Laptop: laptop,
+  Accessory: accessory,
+};
 
 const CategoriesSection = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const handleCategoryClick = (categoryName) => {
-    navigate(`/products?category=${encodeURIComponent(categoryName)}`);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get("/products");
+        const products = response.data;
+
+        const uniqueCategories = [
+          ...new Set(products.map((p) => p.category).filter(Boolean)),
+        ];
+
+        const shuffled = uniqueCategories.sort(() => Math.random() - 0.5);
+
+        setCategories(shuffled.slice(0, 6));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await api.get("/products");
+  //       const products = response.data;
+
+  //       const uniqueCategories = [
+  //         ...new Set(products.map((p) => p.category).filter(Boolean)),
+  //       ];
+  //       setCategories(uniqueCategories);
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCategories();
+  // }, []);
+
+  const handleCategoryClick = (category) => {
+    navigate(`/products?category=${encodeURIComponent(category)}`);
   };
 
+  if (loading) {
+    return (
+      <div className="bg-[#0d0d0d] text-white py-16 text-center">
+        <p className="text-[#76b900] text-lg animate-pulse">
+          Loading categories...
+        </p>
+      </div>
+    );
+  }
+
+  if (!categories.length) {
+    return (
+      <div className="bg-[#0d0d0d] text-gray-400 py-16 text-center">
+        No categories found
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-[#0d0d0d] text-white">
-      <div className="max-w-6xl mx-auto px-6 pb-24">
+    <section className="bg-[#0d0d0d] text-white py-20">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
-            <p className="text-sm uppercase tracking-[0.4em] text-gray-500">
+            <p className="text-sm uppercase tracking-[0.3em] text-gray-500">
               Shop by Category
             </p>
-            <h2 className="text-2xl sm:text-3xl font-semibold mt-2 text-gray-100">
+            <h2 className="text-2xl sm:text-3xl font-bold mt-2 text-gray-100">
               Find gear that matches your playstyle
             </h2>
           </div>
           <span className="hidden sm:block h-px flex-1 sm:ml-8 bg-gradient-to-r from-[#76b900] to-transparent" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {POPULAR_CATEGORIES.map((category) => (
-            <div
-              key={category.name}
-              onClick={() => handleCategoryClick(category.name)}
-              className="text-center flex flex-col items-center gap-4 p-4 rounded-2xl transition-transform duration-200 hover:scale-105"
-            >
-              <div className="relative w-28 h-28 rounded-full border border-[#76b900]/40 bg-white/5 backdrop-blur-md shadow-inner flex items-center justify-center overflow-hidden transition-all duration-200 hover:shadow-[0_0_10px_#76b900]">
-                <img
-                  src={category.icon}
-                  alt={category.name}
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 rounded-full border border-[#76b900]/40 group-hover:border-[#76b900]" />
+        {/* Category Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
+          {categories.map((category, index) => {
+            const image = categoryImages[category] || gpu; // fallback
+            return (
+              <div
+                key={category}
+                onClick={() => handleCategoryClick(category)}
+                className="group flex flex-col items-center text-center cursor-pointer opacity-0 animate-fadeUp hover:scale-110 transition-all duration-300"
+                style={{
+                  animationDelay: `${index * 120}ms`,
+                  animationFillMode: "forwards",
+                }}
+              >
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border border-[#76b900]/40 bg-white/5 backdrop-blur-md shadow-inner flex items-center justify-center overflow-hidden transition-all duration-300 hover:shadow-[0_0_15px_#76b90055]">
+                  <img
+                    src={image}
+                    alt={category}
+                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 rounded-full border border-[#76b900]/40 group-hover:border-[#76b900] transition-all duration-300" />
+                </div>
+                <p className="mt-3 text-gray-200 font-medium text-sm sm:text-base group-hover:text-[#76b900] transition-colors duration-200">
+                  {category}
+                </p>
               </div>
-              <p className="text-gray-100 font-medium group-hover:text-[#76b900] transition-colors">
-                {category.name}
-              </p>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+
+        {/* View All Button */}
+        <div className="text-center mt-10">
+          <button
+            onClick={() => navigate("/products")}
+            className="inline-flex items-center gap-2 px-6 py-2.5 border border-[#76b900] text-[#76b900] hover:bg-[#76b900] hover:text-black font-semibold rounded-lg text-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(118,185,0,0.3)]"
+          >
+            View All Products
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
+          </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
