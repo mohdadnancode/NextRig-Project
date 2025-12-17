@@ -1,35 +1,73 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import { Search, X } from "lucide-react";
+import api from "../../api/client";
+import { motion } from "framer-motion";
+
+const CATEGORIES = [
+  "All",
+  "GPU",
+  "CPU",
+  "RAM",
+  "Storage",
+  "Motherboard",
+  "Cooling System",
+  "Power Supply",
+  "PC Case",
+  "Monitor",
+  "Keyboard",
+  "Mouse",
+  "Headset",
+  "Microphone",
+  "Laptop",
+  "Accessory",
+  "Gaming Console",
+  "Handheld",
+];
+
+const POPULAR_BRANDS = [
+  "All",
+  "NVIDIA",
+  "AMD",
+  "Intel",
+  "ASUS",
+  "MSI",
+  "Corsair",
+  "Logitech",
+  "Razer",
+  "Sony",
+  "HyperX",
+  "Cooler Master",
+  "NZXT",
+  "Lian Li",
+  "Gigabyte",
+  "Samsung",
+  "Lenovo",
+  "HP",
+  "Acer",
+];
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [brand, setBrand] = useState("All");
   const [sortOrder, setSortOrder] = useState("default");
+
+  const [availableBrands, setAvailableBrands] = useState(POPULAR_BRANDS);
+
+  // Infinite scroll
+  const [visibleCount, setVisibleCount] = useState(15);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loadMoreRef = useRef(null);
+
   const navigate = useNavigate();
   const location = useLocation();
   const hasFetched = useRef(false);
-
-  const categories = [
-    "All", "GPU", "CPU", "RAM", "Storage", "Motherboard",
-    "Cooling System", "Power Supply", "PC Case", "Monitor",
-    "Keyboard", "Mouse", "Headset", "Microphone", "Laptop",
-    "Accessory", "Gaming Console", "Handheld"
-  ];
-
-  const popularBrands = [
-    "All", "NVIDIA", "AMD", "Intel", "ASUS", "MSI", "Corsair",
-    "Logitech", "Razer", "Sony", "HyperX", "Cooler Master",
-    "NZXT", "Lian Li", "Gigabyte", "Samsung", "Lenovo", "HP", "Acer"
-  ];
-
-  const [availableBrands, setAvailableBrands] = useState(popularBrands);
 
   const queryParams = new URLSearchParams(location.search);
   const urlCategory = queryParams.get("category");
@@ -38,14 +76,22 @@ function Products() {
     const fetchProducts = async () => {
       if (hasFetched.current) return;
       try {
-        const response = await axios.get("http://localhost:3000/products");
+        const response = await api.get("/products");
+
+        // Shuffle order
         const shuffled = [...response.data].sort(() => Math.random() - 0.5);
         setProducts(shuffled);
 
-        const brandsFromProducts = [...new Set(response.data.map(p => p.brand))].filter(Boolean);
-        const allBrands = [...new Set([...popularBrands, ...brandsFromProducts])];
-        setAvailableBrands(allBrands);
+        // Build brand list
+        const brandsFromProducts = [
+          ...new Set(response.data.map((p) => p.brand)),
+        ].filter(Boolean);
 
+        const allBrands = [
+          ...new Set([...POPULAR_BRANDS, ...brandsFromProducts]),
+        ];
+
+        setAvailableBrands(allBrands);
         hasFetched.current = true;
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -53,12 +99,15 @@ function Products() {
         setLoading(false);
       }
     };
+
     fetchProducts();
   }, []);
 
   useEffect(() => {
-    if (urlCategory && categories.includes(urlCategory)) setCategory(urlCategory);
-  }, [urlCategory, categories]);
+    if (urlCategory && CATEGORIES.includes(urlCategory)) {
+      setCategory(urlCategory);
+    }
+  }, [urlCategory]);
 
   const handleSearch = () => setSearch(searchInput.trim());
   const handleKeyPress = (e) => e.key === "Enter" && handleSearch();
@@ -69,11 +118,14 @@ function Products() {
     setCategory("All");
     setBrand("All");
     setSortOrder("default");
+    setVisibleCount(15);
     navigate("/products", { replace: true });
   };
 
   const filteredProducts = products
-    .filter((p) => (search ? p.name.toLowerCase().includes(search.toLowerCase()) : true))
+    .filter((p) =>
+      search ? p.name.toLowerCase().includes(search.toLowerCase()) : true
+    )
     .filter((p) => (category === "All" ? true : p.category === category))
     .filter((p) => (brand === "All" ? true : p.brand === brand))
     .sort((a, b) => {
@@ -82,6 +134,42 @@ function Products() {
       return 0;
     });
 
+  useEffect(() => {
+    setVisibleCount(Math.min(15, filteredProducts.length || 15));
+  }, [search, category, brand, sortOrder, filteredProducts.length]);
+
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    if (filteredProducts.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (
+          entry.isIntersecting &&
+          !loadingMore &&
+          visibleCount < filteredProducts.length
+        ) {
+          setLoadingMore(true);
+          setTimeout(() => {
+            setVisibleCount((prev) =>
+              Math.min(prev + 15, filteredProducts.length)
+            );
+            setLoadingMore(false);
+          }, 500);
+        }
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [filteredProducts.length, loadingMore, visibleCount]);
+
+  /* 🌀 Initial loading screen */
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center text-[#76b900] text-xl">
@@ -143,7 +231,7 @@ function Products() {
               onChange={(e) => setCategory(e.target.value)}
               className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-[#76b900] transition-colors"
             >
-              {categories.map((cat) => (
+              {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat} className="text-black bg-white">
                   {cat === "All" ? "All Categories" : cat}
                 </option>
@@ -167,12 +255,21 @@ function Products() {
               onChange={(e) => setSortOrder(e.target.value)}
               className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-[#76b900] transition-colors"
             >
-              <option value="default" className="text-black bg-white">Sort by</option>
-              <option value="low" className="text-black bg-white">Price: Low to High</option>
-              <option value="high" className="text-black bg-white">Price: High to Low</option>
+              <option value="default" className="text-black bg-white">
+                Sort by
+              </option>
+              <option value="low" className="text-black bg-white">
+                Price: Low to High
+              </option>
+              <option value="high" className="text-black bg-white">
+                Price: High to Low
+              </option>
             </select>
 
-            {(search || category !== "All" || brand !== "All" || sortOrder !== "default") && (
+            {(search ||
+              category !== "All" ||
+              brand !== "All" ||
+              sortOrder !== "default") && (
               <button
                 onClick={clearAllFilters}
                 className="px-4 py-3 border border-white/10 rounded-lg text-gray-300 hover:text-[#76b900] hover:border-[#76b900]/60 transition-all"
@@ -187,14 +284,37 @@ function Products() {
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto">
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-  {filteredProducts.map((product) => (
-    <ProductCard key={product.id} product={product} />
-  ))}
-</div>
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {filteredProducts.slice(0, visibleCount).map((product) => (
+  <motion.div
+    key={product.id}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
+  >
+    <ProductCard product={product} />
+  </motion.div>
+))}
+            </div>
+
+            {/* Sentinel div for infinite scroll */}
+            {visibleCount < filteredProducts.length && (
+              <div ref={loadMoreRef} className="h-10" />
+            )}
+
+            {/* Loading more indicator */}
+            {loadingMore && visibleCount < filteredProducts.length && (
+              <div className="text-center text-[#76b900] mt-6 animate-pulse">
+                Loading more products...
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-20">
-            <h3 className="text-xl font-bold text-gray-300 mb-2">No products found</h3>
+            <h3 className="text-xl font-bold text-gray-300 mb-2">
+              No products found
+            </h3>
             <p className="text-gray-500 mb-6 text-sm">
               {search
                 ? `No results for "${search}"`
