@@ -1,109 +1,136 @@
-import React, { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
-import toast from "react-hot-toast";
+import RevealOnScroll from "../../components/ui/RevealOnScroll";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast.success("Message submitted successfully!");
-    setFormData({ name: "", email: "", message: "" });
-  };
-
   return (
-    <div className="min-h-screen bg-[#0d0d0d] text-gray-200 py-20 px-6 mt-16">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center text-[#76b900] border-b border-[#76b900]/30 inline-block pb-2 mb-10">
-          Contact Us
-        </h1>
-
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          <div className="space-y-6">
-            <p className="text-gray-400 text-lg">
-              Have questions, feedback, or partnership ideas? We'd love to hear from you!
-              Reach out to us through the form or our contact details below.
+    <div className="bg-black text-gray-100">
+      {/* Hero Banner */}
+      <section className="relative py-24 border-b border-white/10 text-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-black"></div>
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <RevealOnScroll>
+            <p className="text-xs uppercase tracking-[0.3em] text-[#76b900] mb-3">
+              Get in Touch
             </p>
-
-            <div className="space-y-4 mt-6">
-              <div className="flex items-center gap-3">
-                <Mail className="text-[#76b900]" />
-                <span>support@nextrig.com</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="text-[#76b900]" />
-                <span>+91 9876543210</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="text-[#76b900]" />
-                <span>Kasaragod, Kerala, India</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white/5 border border-white/10 rounded-xl p-6 shadow-lg space-y-4"
-          >
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full bg-transparent border border-white/20 rounded-md p-3 text-gray-100 placeholder-gray-400 focus:border-[#76b900] focus:outline-none"
-                placeholder="Your name"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full bg-transparent border border-white/20 rounded-md p-3 text-gray-100 placeholder-gray-400 focus:border-[#76b900] focus:outline-none"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">Message</label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows="4"
-                className="w-full bg-transparent border border-white/20 rounded-md p-3 text-gray-100 placeholder-gray-400 focus:border-[#76b900] focus:outline-none resize-none"
-                placeholder="Type your message..."
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-[#76b900] text-black font-semibold py-3 px-6 rounded-lg hover:shadow-[0_0_20px_#76b900] hover:scale-105 transition-all duration-300"
-            >
-              Send Message
-            </button>
-          </form>
+            <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+              Contact <span className="text-[#76b900]">NextRig</span>
+            </h1>
+            <p className="text-gray-400 max-w-2xl mx-auto text-sm">
+              Have questions about builds, orders, or partnerships? Reach out to us — we'll get
+              back to you faster than your FPS counter refreshes.
+            </p>
+          </RevealOnScroll>
         </div>
-      </div>
+      </section>
+
+      {/* Contact Info + Form */}
+      <section className="py-20 border-b border-white/5 bg-gradient-to-b from-black/0 via-black/30 to-black/70">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16">
+          {/* Left: Info */}
+          <RevealOnScroll delay={0.1}>
+            <div>
+              <h2 className="text-3xl font-semibold mb-6">Get in Touch</h2>
+              <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                Whether you're a gamer, content creator, or company, we're always happy to talk
+                about builds, performance tuning, or collaborations. Drop us a message or contact us
+                directly using the details below.
+              </p>
+
+              <div className="space-y-5 text-sm">
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 text-[#76b900]" />
+                  <span className="text-gray-300">support@nextrig.in</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-[#76b900]" />
+                  <span className="text-gray-300">+91 98765 43210</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-[#76b900] mt-1" />
+                  <span className="text-gray-300">
+                    NextRig HQ, Tech Park Road, Bengaluru, India
+                  </span>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
+
+          {/* Right: Form */}
+          <RevealOnScroll delay={0.2}>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="bg-black/40 border border-white/10 rounded-2xl p-8 shadow-[0_0_35px_rgba(118,185,0,0.15)]"
+            >
+              <h3 className="text-xl font-medium mb-6">Send us a Message</h3>
+
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Name</label>
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full bg-black/60 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-100 focus:outline-none focus:border-[#76b900] transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Email</label>
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    className="w-full bg-black/60 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-100 focus:outline-none focus:border-[#76b900] transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">Message</label>
+                  <textarea
+                    rows="4"
+                    placeholder="Type your message here..."
+                    className="w-full bg-black/60 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-100 focus:outline-none focus:border-[#76b900] transition resize-none"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#76b900] text-black text-sm font-medium py-3 rounded-lg hover:opacity-90 transition"
+                >
+                  Send Message
+                </button>
+              </div>
+            </form>
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      {/* Map (static image, no API needed) */}
+      <section className="py-16 border-t border-white/5">
+        <RevealOnScroll>
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[#76b900] mb-3">
+              Find Us
+            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-100 mb-6">
+              Our Location
+            </h2>
+            <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_35px_rgba(118,185,0,0.15)] group">
+  <iframe
+    title="NextRig Location"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15657.802823224323!2d75.88825034999999!3d11.1542272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba6502f41ef4e8b%3A0xf4c653a7548cccd!2sKinfra%20Techno%20Industrial%20Park!5e0!3m2!1sen!2sin!4v1765260740588!5m2!1sen!2sin"
+    width="100%"
+    height="320"
+    allowFullScreen=""
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+    className="w-full h-80 grayscale-[0.8] contrast-[1.1] brightness-[0.6] transition-all duration-500 group-hover:grayscale-0 group-hover:brightness-100"
+  ></iframe>
+
+  <div className="absolute inset-0 border border-[#76b900]/20 rounded-2xl pointer-events-none"></div>
+  <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#76b900]/20 via-transparent to-[#76b900]/20 opacity-0 group-hover:opacity-100 blur-xl transition duration-700 pointer-events-none"></div>
+</div>
+          </div>
+        </RevealOnScroll>
+      </section>
     </div>
   );
 };
