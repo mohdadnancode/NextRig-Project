@@ -13,7 +13,7 @@ const ProductDetails = lazy(() => import("./pages/public/ProductDetails"));
 const Checkout = lazy(() => import("./pages/user/Checkout"));
 const UserProfile = lazy(() => import("./pages/user/UserProfile"));
 const MyOrders = lazy(() => import("./pages/user/MyOrder"));
-const Wishlist = lazy(() => import("./pages/user/Whishlist"));
+const Wishlist = lazy(() => import("./pages/user/Wishlist"));
 
 const About = lazy(() => import("./pages/FooterPages/About"));
 const Contact = lazy(() => import("./pages/FooterPages/Contact"));
