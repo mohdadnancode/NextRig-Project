@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         wishlist: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        isBlock: false,
+        isBlocked: false,
       };
 
       await api.post("/users", newUser);
@@ -67,13 +67,13 @@ export const AuthProvider = ({ children }) => {
       );
 
       if (users.length === 0) throw new Error("Invalid email or password");
-      if (users[0].isBlock) throw new Error("Your account has been blocked");
+      if (users[0].isBlocked) throw new Error("Your account has been blocked");
 
       const loggedInUser = users[0];
       localStorage.setItem("user", JSON.stringify(loggedInUser));
       setUser(loggedInUser);
       setIsAuthenticated(true);
-      return { success: true };
+      return { success: true, user: loggedInUser };
     } catch (error) {
       setAuthError(error.message);
       return { success: false };

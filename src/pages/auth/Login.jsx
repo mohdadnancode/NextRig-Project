@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +22,15 @@ const Login = () => {
       setLocalError("");
       try {
         const result = await login(values.email, values.password);
+
         if (result.success) {
-          alert("Login successful!");
-          navigate("/");
+          toast.success("Login successful!");
+
+          if (result.user.role === "admin") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
         } else {
           setLocalError("Invalid email or password.");
         }

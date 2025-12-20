@@ -74,7 +74,14 @@ const MyOrders = () => {
       const userData = res.data;
 
       const updatedOrders = userData.orders.map((order) =>
-        order.id === orderId ? { ...order, status: "cancelled" } : order
+        order.id === orderId
+          ? {
+              ...order,
+              status: "cancelled",
+              cancelledBy: "user",
+              cancelledAt: new Date().toISOString(),
+            }
+          : order
       );
 
       await api.patch(`/users/${userId}`, {
@@ -163,7 +170,9 @@ const MyOrders = () => {
           <h1 className="text-3xl sm:text-4xl font-bold text-[#76b900] mb-4">
             My Orders
           </h1>
-          <p className="text-gray-400 text-lg">Track and manage your purchases</p>
+          <p className="text-gray-400 text-lg">
+            Track and manage your purchases
+          </p>
         </div>
 
         {/* Filters Section */}
@@ -172,7 +181,9 @@ const MyOrders = () => {
             <div className="flex flex-wrap gap-4">
               <span className="flex items-center gap-2 text-sm text-gray-300">
                 <ShoppingBag size={16} className="text-[#76b900]" /> Total:
-                <span className="font-semibold text-white">{orders.length}</span>
+                <span className="font-semibold text-white">
+                  {orders.length}
+                </span>
               </span>
               <span className="flex items-center gap-2 text-sm text-gray-300">
                 <Clock size={16} className="text-yellow-500" /> Pending:

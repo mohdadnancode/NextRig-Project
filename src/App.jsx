@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./Auth/ProtectedRoute";
+import AdminRoutes from "./admin/routes/AdminRoutes";
 
 const Home = lazy(() => import("./pages/public/Home"));
 const Register = lazy(() => import("./pages/auth/Register"));
@@ -66,6 +67,8 @@ const App = () => {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/returns" element={<Returns />} />
         </Route>
+
+        <Route path="/admin/*" element={<AdminRoutes />} />
 
         <Route path="/*" element={<NotFound />} />
       </Routes>

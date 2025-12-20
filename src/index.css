@@ -73,3 +73,23 @@ body {
     transform: translateY(0);
   }
 }
+
+
+.input {
+  @apply bg-black border border-white/10 px-3 py-2 rounded w-full;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
