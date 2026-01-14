@@ -1,6 +1,27 @@
 {
   "users": [
     {
+      "id": "whpj",
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "password": "admin123",
+      "role": "admin",
+      "profileImage": "",
+      "address": {
+        "fullName": "Afdmin",
+        "address": "Udyawar Manjeshwar",
+        "city": "Kasaragod",
+        "pincode": "671323",
+        "mobileNumber": "9074774402"
+      },
+      "cart": [],
+      "orders": [],
+      "wishlist": [],
+      "createdAt": "2025-12-18T09:56:57.826Z",
+      "updatedAt": "2025-12-18T15:09:24.976Z",
+      "isBlocked": false
+    },
+    {
       "id": "a3ed",
       "username": "Adnan",
       "email": "adnan@gmail.com",
@@ -14,7 +35,19 @@
         "pincode": "671323",
         "mobileNumber": "9074774402"
       },
-      "cart": [],
+      "cart": [
+        {
+          "id": "22",
+          "name": "MSI B650 Tomahawk WiFi",
+          "brand": "MSI",
+          "category": "Motherboard",
+          "price": 22999,
+          "description": "AM5 motherboard with PCIe 5.0 support and excellent VRMs.",
+          "image": "https://m.media-amazon.com/images/I/81ymStt-9cL._SX679_.jpg",
+          "featured": false,
+          "quantity": 1
+        }
+      ],
       "orders": [
         {
           "id": "ORD-1766050301204",
@@ -102,7 +135,7 @@
       ],
       "wishlist": [],
       "createdAt": "2025-11-27T04:32:46.576Z",
-      "updatedAt": "2025-12-19T03:31:50.532Z",
+      "updatedAt": "2026-01-13T14:40:36.561Z",
       "isBlocked": false
     },
     {
@@ -232,34 +265,19 @@
       "isBlocked": true
     },
     {
-      "id": "whpj",
-      "username": "admin",
-      "email": "admin@gmail.com",
-      "password": "admin123",
-      "role": "admin",
-      "profileImage": "",
-      "address": {
-        "fullName": "Afdmin",
-        "address": "Udyawar Manjeshwar",
-        "city": "Kasaragod",
-        "pincode": "671323",
-        "mobileNumber": "9074774402"
-      },
-      "cart": [],
-      "orders": [],
-      "wishlist": [],
-      "createdAt": "2025-12-18T09:56:57.826Z",
-      "updatedAt": "2025-12-18T15:09:24.976Z",
-      "isBlocked": false
-    },
-    {
       "id": "n0ah",
       "username": "test",
       "email": "testing@gmail.com",
       "password": "123456",
       "role": "user",
       "profileImage": "",
-      "address": [],
+      "address": {
+        "fullName": "Hehe he",
+        "address": "heheheheheh",
+        "city": "heheh",
+        "pincode": "123456",
+        "mobileNumber": "1234567890"
+      },
       "cart": [],
       "orders": [
         {
@@ -314,12 +332,47 @@
           },
           "cancelledBy": "admin",
           "cancelledAt": "2025-12-19T10:00:16.720Z"
+        },
+        {
+          "id": "ORD-1766217967591",
+          "date": "2025-12-20T08:06:07.591Z",
+          "items": [
+            {
+              "id": "13",
+              "name": "Kingston Fury Beast 16GB DDR4 3600MHz",
+              "price": 7499,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/71nQp70NhYL._SX522_.jpg",
+              "category": "RAM"
+            },
+            {
+              "id": "17",
+              "name": "Western Digital SN850X 2TB NVMe SSD",
+              "price": 16999,
+              "quantity": 1,
+              "image": "https://m.media-amazon.com/images/I/61jQCrK6mFL._SX679_.jpg",
+              "category": "Storage"
+            }
+          ],
+          "totalAmount": 24513,
+          "status": "pending",
+          "paymentMethod": "cod",
+          "paymentDetails": {
+            "convenienceFee": 15
+          },
+          "shippingAddress": {
+            "fullName": "Hehe he",
+            "address": "heheheheheh",
+            "city": "heheh",
+            "pincode": "123456",
+            "mobileNumber": "1234567890"
+          }
         }
       ],
       "wishlist": [],
       "createdAt": "2025-12-19T09:55:51.897Z",
-      "updatedAt": "2025-12-19T09:59:19.913Z",
-      "isBlocked": true
+      "updatedAt": "2025-12-20T08:06:07.599Z",
+      "isBlocked": false
     }
   ],
   "products": [
