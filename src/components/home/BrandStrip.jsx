@@ -4,7 +4,7 @@ import logitech from "../../assets/images/brands/logitech.svg";
 import nvidia from "../../assets/images/brands/NVIDIA-logo.webp";
 import amd from "../../assets/images/brands/amd.webp";
 import msi from "../../assets/images/brands/msi-logo.webp";
-import rog from "../../assets/images/brands/ROG logo.webp";
+import rog from "../../assets/images/brands/rog-logo.webp";
 
 const TRUSTED_BRANDS = [
   { name: "NVIDIA", logo: nvidia },
