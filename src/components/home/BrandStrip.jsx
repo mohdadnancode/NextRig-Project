@@ -3,7 +3,7 @@ import razer from "../../assets/images/brands/razer1.svg";
 import logitech from "../../assets/images/brands/logitech.svg";
 import nvidia from "../../assets/images/brands/NVIDIA-logo.webp";
 import amd from "../../assets/images/brands/amd.webp";
-import msi from "../../assets/images/brands/msi-logo.webp";
+import msi from "../../assets/images/brands/msii-logo.webp";
 import rog from "../../assets/images/brands/rog-logo.webp";
 
 const TRUSTED_BRANDS = [
