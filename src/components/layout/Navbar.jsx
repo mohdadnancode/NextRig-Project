@@ -191,25 +191,28 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Right Icons */}
-<div className="md:hidden flex items-center gap-4">
-  {/* Cart Icon with Badge */}
-  <Link to="/cart" className="relative text-gray-300 hover:text-[#76b900]">
-    <i className="fa-solid fa-cart-shopping text-xl"></i>
-    {cartCount > 0 && (
-      <span className="absolute -top-2 -right-2 bg-[#76b900] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-        {cartCount}
-      </span>
-    )}
-  </Link>
+        <div className="md:hidden flex items-center gap-4">
+          {/* Cart Icon with Badge */}
+          <Link
+            to="/cart"
+            className="relative text-gray-300 hover:text-[#76b900]"
+          >
+            <i className="fa-solid fa-cart-shopping text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#76b900] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
 
-  {/* Hamburger Menu */}
-  <button
-    onClick={() => setMenuOpen(!menuOpen)}
-    className="text-gray-300 hover:text-[#76b900] text-2xl"
-  >
-    <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
-  </button>
-</div>
+          {/* Hamburger Menu */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-gray-300 hover:text-[#76b900] text-2xl"
+          >
+            <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`}></i>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Drawer */}
@@ -225,9 +228,7 @@ const Navbar = () => {
               to={link.path}
               onClick={() => setMenuOpen(false)}
               className={`text-lg font-medium ${
-                isActive(link.path)
-                  ? "text-[#76b900]"
-                  : "hover:text-[#76b900]"
+                isActive(link.path) ? "text-[#76b900]" : "hover:text-[#76b900]"
               }`}
             >
               {link.label}

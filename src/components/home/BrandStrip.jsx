@@ -50,7 +50,7 @@ const BrandStrip = () => {
               Trusted Brands
             </p>
             <h2 className="text-xl sm:text-2xl font-semibold mt-2 text-gray-100">
-              Gear from the world’s top performance brands
+              Gear from the world's top performance brands
             </h2>
           </div>
           <span className="hidden lg:block h-px flex-1 lg:ml-8 bg-gradient-to-r from-[#76b900] to-transparent" />
